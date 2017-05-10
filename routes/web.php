@@ -14,9 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store'], function() {
     Route::get('/', 'HomeController@index');
+    Route::resource('order', 'OrderController');
 });
 Auth::routes();
 

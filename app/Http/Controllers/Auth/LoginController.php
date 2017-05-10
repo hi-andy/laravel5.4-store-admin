@@ -22,7 +22,6 @@ class LoginController extends Controller
 
     public function username()
     {
-        //print_r($_REQUEST);exit;
         return 'merchant_name';
     }
 
