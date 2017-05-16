@@ -54,7 +54,7 @@
 <body>
 
 @yield('menu')
-
+@yield('login')
 
 <!-- external javascript -->
 <script src="{{ asset('charisma/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>

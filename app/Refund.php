@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Refund extends Model
 {
-    protected $table = 'order';
-    protected $primaryKey = 'order_id';
+    protected $table = 'return_goods';
+    protected $primaryKey = 'id';
     public $timestamps = false;
-
 }

@@ -90,7 +90,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'zh-CN',
 
     /*
     |--------------------------------------------------------------------------
@@ -183,6 +183,11 @@ return [
          */
         Barryvdh\Debugbar\ServiceProvider::class,
 
+        /**
+         * Add Datatables
+         */
+        Yajra\Datatables\DatatablesServiceProvider::class,
+
     ],
 
     /*
@@ -236,6 +241,11 @@ return [
          * Debugbar
          */
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+
+        /**
+         * Datatables
+         */
+        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
 
     ],
 

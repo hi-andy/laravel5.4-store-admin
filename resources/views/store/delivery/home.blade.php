@@ -8,7 +8,7 @@
                     <a href="#">后台主页</a>
                 </li>
                 <li>
-                    <a href="#">订单列表</a>
+                    <a href="#">发货单列表</a>
                 </li>
             </ul>
         </div>
@@ -33,14 +33,10 @@
                             <tr>
                                 <th>订单号</th>
                                 <th>收货人</th>
-                                <th>总金额</th>
-                                <th>应付金额</th>
-                                <th>订单状态</th>
-                                <th>支付状态</th>
-                                <th>发货状态</th>
-                                <th>支付方式</th>
-                                <th>配送方式</th>
+                                <th>联系电话</th>
+                                <th>订单总价</th>
                                 <th>下单时间</th>
+                                <th>支付时间</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -83,19 +79,15 @@
             },
             serverSide: true,
             processing: true,
-            ajax: '/store/order/data',
+            ajax: '/store/delivery/data',
             columns: [
                 {data: 'order_sn'},
                 {data: 'consignee'},
+                {data: 'mobile'},
                 {data: 'total_amount'},
-                {data: 'order_amount'},
-                {data: 'order_type'},
-                {data: 'pay_status'},
-                {data: 'shipping_status'},
-                {data: 'pay_name'},
-                {data: 'shipping_name'},
                 {data: 'add_time'},
-                {data: 'action', orderable: false, searchable: false}
+                {data: 'pay_time'},
+                {data: 'action', orderable: false}
             ]
         });
 

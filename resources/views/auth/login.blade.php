@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('login')
     <div class="ch-container">
         <div class="row">
 
