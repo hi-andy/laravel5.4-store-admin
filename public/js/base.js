@@ -117,6 +117,7 @@ function docReady() {
         else $('i', $(this)).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
         $target.slideToggle();
     });
+
     $('.btn-setting').click(function (e) {
         e.preventDefault();
         $('#myModal').modal('show');

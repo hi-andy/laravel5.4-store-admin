@@ -45,7 +45,7 @@ class OrderController extends Controller
             $value->add_time = date('Y-m-d H:i:s', $value->add_time);
             $value->shipping_status = $value->shipping_status ? '已发货' : '未发货';
             $value->pay_status = $value->pay_status ? '已付款' : '未付款';
-            $value->order_type = $this->transferStatus($value->order_type);
+            $value->order_type = $this->transformStatus($value->order_type);
         }
 
         return $datatables->collection($query)
@@ -77,7 +77,7 @@ class OrderController extends Controller
      * 14、已成团，待发货
      * 15、已成团，待收货
      * */
-    private function transferStatus($status)
+    private function transformStatus($status)
     {
         switch ($status) {
             case 1 :
