@@ -19,6 +19,11 @@ class GoodsController extends Controller
         return view('store/goods/home');
     }
 
+    /**
+     * @param Datatables $datatables
+     * @return \Illuminate\Http\JsonResponse
+     * 返回商品列表 Json 数据
+     */
     public function data(Datatables $datatables)
     {
         $query = Goods::select(
@@ -33,16 +38,11 @@ class GoodsController extends Controller
             'is_show'
         )->where('store_id', Auth::user()->id)->orderBy('goods_id','desc')->get();
         foreach ($query as $value) {
+            $value->is_audit = $value->is_audit == 0 ? '待审核' : ($value->is_audit == 1 ? '审核通过' : '审核未通过');
         }
 
         return $datatables->collection($query)
             ->addColumn('action', 'store.goods.user-action')
-//            ->addColumn('action', function () {
-//                return '<a class="btn btn-info" href="edit/'.$query->goods_id.'"><i class="glyphicon glyphicon-edit icon-white"></i> 编辑 </a>
-//                <form action="delete/'.$query->goods_id.'" method="POST" style="display: inline;">
-//                    <button class="btn btn-danger" ><i class="glyphicon glyphicon-trash icon-white"></i>删除</button>
-//                </form>';
-//            })
             ->make(true);
     }
 
@@ -63,12 +63,12 @@ class GoodsController extends Controller
      */
     public function store(Request $request)
     {
-        $messages = [
-            'goods_name'    => 'The :attribute and :other must match.',
-            'cat_id'    => 'The :attribute must be exactly :size.',
-            'prom' => 'The :attribute must be greatThan :min',
-            'shop_price'      => '请填写销售价格',
-        ];
+//        $messages = [
+//            'goods_name'    => 'The :attribute and :other must match.',
+//            'cat_id'    => 'The :attribute must be exactly :size.',
+//            'prom' => 'The :attribute must be greatThan :min',
+//            'shop_price'      => '请填写销售价格',
+//        ];
         $this->validate($request, [
             'goods_name' => 'required|max:255',
             'store_count'   => 'nullable',
@@ -98,7 +98,6 @@ class GoodsController extends Controller
         }
         if (empty($goods->shop_price)) {
             return redirect()->back()->withInput()->with('failed', '商品售价不能为空！');
-            //return redirect('store/goods/home')->with('status', 'Profile updated!');
         }
 
 
@@ -131,7 +130,7 @@ class GoodsController extends Controller
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
-     * 保存修改商品信息
+     * 更新商品信息
      */
     public function update(Request $request, $id)
     {
@@ -166,7 +165,6 @@ class GoodsController extends Controller
         }
         if (empty($goods->shop_price)) {
             return redirect()->back()->withInput()->with('failed', '商品售价不能为空！');
-            //return redirect('store/goods/home')->with('status', 'Profile updated!');
         }
 
         if ($goods->save()) {

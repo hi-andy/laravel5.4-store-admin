@@ -35,13 +35,13 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store
     Route::get('refund/data',       'RefundController@data');
 
     // 商品
-    Route::get('goods/index',       'GoodsController@index');
-    Route::get('goods/data',        'GoodsController@data');
-    Route::get('goods/create',      'GoodsController@create');
-    Route::post('goods/store',      'GoodsController@store');
-    Route::get('goods/edit/{id}',   'GoodsController@edit');
-    Route::post('goods/update/{id}',   'GoodsController@update');
-    Route::post('goods/delete/{id}',   'GoodsController@delete');
+    Route::get('goods/index',           'GoodsController@index');
+    Route::get('goods/data',            'GoodsController@data');
+    Route::get('goods/create',          'GoodsController@create');
+    Route::post('goods/store',          'GoodsController@store');
+    Route::get('goods/edit/{id}',       'GoodsController@edit');
+    Route::post('goods/update/{id}',    'GoodsController@update');
+    Route::post('goods/destroy/{id}',   'GoodsController@destroy');
 
     // 商品分类
     Route::get('category/getSubCategory/{id}',  'CategoryController@getSubCategory');

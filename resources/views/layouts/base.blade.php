@@ -4,13 +4,10 @@
     <!--
         ===
         This comment should NOT be removed.
-
         Charisma v2.0.0
-
         Copyright 2012-2014 Muhammad Usman
         Licensed under the Apache License v2.0
         http://www.apache.org/licenses/LICENSE-2.0
-
         http://usman.it
         http://twitter.com/halalit_usman
         ===
@@ -37,21 +34,14 @@
     <script src="{{ asset('/js/base.js') }}"></script>
     <!-- The fav icon -->
     <link rel="shortcut icon" href="img/favicon.ico">
-
 </head>
-
 <body>
-
-
-
 
 @yield('menu')
 @yield('login')
 <!-- external javascript -->
 <script src="{{ asset('charisma/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -71,7 +61,8 @@
     </div>
 </div>
 <style>
-    .alert {
+    /* 此样式写到单独的文件里，会出现加载权重问题，加载不到 */
+    .alert-modified {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -90,24 +81,24 @@
         -webkit-box-shadow: 2px 2px 5px #444;
         z-index: 9999;
     }
-    .alert .close{
+    .alert-modified .close{
         line-height: 0;
     }
 </style>
 @if (session('success'))
-    <div class="alert alert-success">
+    <div class="alert-modified alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>{{ session('success') }}</strong>
     </div>
 @endif
 @if (session('failed'))
-<div class="alert alert-danger">
+<div class="alert-modified alert-danger">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>{{ session('failed') }}</strong>
 </div>
 @endif
 @if(session('alert'))
-<div class="alert alert-info">
+<div class="alert-modified alert-info">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong>{{ session('alert') }}</strong>
 </div>
