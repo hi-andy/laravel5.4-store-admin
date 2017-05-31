@@ -46,6 +46,15 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store
     // 商品分类
     Route::get('category/getSubCategory/{id}',  'CategoryController@getSubCategory');
 
+    // 优惠券
+    Route::get('coupon/index',           'CouponController@index');
+    Route::get('coupon/data',            'CouponController@data');
+    Route::get('coupon/create',          'CouponController@create');
+    Route::post('coupon/store',          'CouponController@store');
+    Route::get('coupon/edit/{id}',       'CouponController@edit');
+    Route::post('coupon/update/{id}',    'CouponController@update');
+    Route::post('coupon/destroy/{id}',   'CouponController@destroy');
+
 });
 
 

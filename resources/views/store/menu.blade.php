@@ -107,8 +107,8 @@
                             <li class="accordion">
                                 <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 优惠券管理</span></a>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">添加优惠券</a></li>
-                                    <li><a href="#">优惠券列表</a></li>
+                                    <li><a href="{{ asset('store/coupon/create') }}">添加优惠券</a></li>
+                                    <li><a href="{{ asset('store/coupon/index') }}">优惠券列表</a></li>
                                 </ul>
                             </li>
                             <li class="accordion">

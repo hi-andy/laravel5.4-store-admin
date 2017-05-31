@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Category;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
@@ -13,7 +11,7 @@ class CategoryController extends Controller
 
     /**
      * @param $id
-     * @return mixed 返回分类列表
+     * @return mixed 返回给定 id 的子分类列表
      */
     public function getSubCategory($id)
     {
@@ -22,11 +20,10 @@ class CategoryController extends Controller
 
     /**
      * @param $id
-     * @return mixed 暂时无用
+     * @return mixed 返回给定 id 的分类信息
      */
     public function getCategory($id)
     {
-        //return Category::find('select `id`,`name`,`parent_id` from tp_goods_category where id='.$id);
         return Category::find($id);
     }
 }

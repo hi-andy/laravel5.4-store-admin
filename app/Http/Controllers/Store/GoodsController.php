@@ -26,6 +26,7 @@ class GoodsController extends Controller
      */
     public function data(Datatables $datatables)
     {
+        $cat = new CategoryController();
         $query = Goods::select(
             'goods_id',
             'goods_name',
@@ -39,6 +40,11 @@ class GoodsController extends Controller
         )->where('store_id', Auth::user()->id)->orderBy('goods_id','desc')->get();
         foreach ($query as $value) {
             $value->is_audit = $value->is_audit == 0 ? '待审核' : ($value->is_audit == 1 ? '审核通过' : '审核未通过');
+            $value->cat_id = $cat->getCategory($value->cat_id)->name;
+            $value->is_on_sale = $value->is_on_sale == 0 ? '未上架' : '销售中';
+            $value->is_show = $value->is_show == 0 ? '未显示' : '显示中';
+            $value->is_special = $this->transformType($value->is_special);
+            $value->shop_price = '￥ ' . $value->shop_price;
         }
 
         return $datatables->collection($query)
@@ -150,8 +156,6 @@ class GoodsController extends Controller
         $goods->store_id        = $request->user()->id;
         $goods->addtime         = time();
 
-
-
         // 确认上传图片是否有效
         if ($request->hasFile('list_img')) {
             $goods->list_img = $request->file('list_img')->store('public/goods/list_img');
@@ -183,5 +187,44 @@ class GoodsController extends Controller
     {
         Goods::find($id)->delete();
         return redirect('store/goods/index')->with('success', '商品删除成功！');
+    }
+
+    /**
+     * 商品特殊类型 1-海淘，2-限时秒杀，3-一元夺宝，4-99专场，5-优惠组合，6-免单拼 , 7-0.1秒杀，8-为我拼,9->趣多严选
+     * 商品类型转换
+     */
+    private function transformType($type)
+    {
+        switch ($type) {
+            case 1 :
+                return '海淘商品';
+                break;
+            case 2 :
+                return '限时秒杀';
+                break;
+            case 3 :
+                return '一元夺宝';
+                break;
+            case 4 :
+                return '9.9专场';
+                break;
+            case 5 :
+                return '优惠组合';
+                break;
+            case 6 :
+                return '免单拼';
+                break;
+            case 7 :
+                return '0.1秒杀';
+                break;
+            case 8 :
+                return '为我拼';
+                break;
+            case 9 :
+                return '趣多严选';
+                break;
+            default :
+                return '普通商品';
+        }
     }
 }
