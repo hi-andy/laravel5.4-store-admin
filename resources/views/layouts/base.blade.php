@@ -66,7 +66,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 250px;
+        width: 300px;
         height: 80px;
         line-height: 50px;
         margin-left: -125px;

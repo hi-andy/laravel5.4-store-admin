@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 订单控制器
+ */
 namespace App\Http\Controllers\Store;
 
 use App\Order;
@@ -26,7 +28,6 @@ class OrderController extends Controller
      */
     public function data(Datatables $datatables)
     {
-//        $query = Order::where('store_id', Auth::user()->id)->where('is_show', '1')->where('prom_id', 'null')->orderBy('order_sn','desc')->get();
         $query = Order::select(
                 'order_id',
                 'order_sn',

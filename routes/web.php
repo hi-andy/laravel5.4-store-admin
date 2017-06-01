@@ -55,6 +55,12 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store
     Route::post('coupon/update/{id}',    'CouponController@update');
     Route::post('coupon/destroy/{id}',   'CouponController@destroy');
 
+    // 提现
+    Route::get('withdrawal/index',           'WithdrawalController@index');
+    Route::get('withdrawal/data',            'WithdrawalController@data');
+    Route::get('withdrawal/create',          'WithdrawalController@create');
+    Route::post('withdrawal/store',          'WithdrawalController@store');
+
 });
 
 

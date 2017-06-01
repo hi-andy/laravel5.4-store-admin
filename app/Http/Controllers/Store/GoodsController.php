@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 商品控制器
+ */
 namespace App\Http\Controllers\Store;
 
 use App\Goods;

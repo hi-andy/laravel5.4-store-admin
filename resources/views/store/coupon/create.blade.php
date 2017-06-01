@@ -107,27 +107,6 @@
     <script src='{{ asset('/js/bootstrap-datetimepicker.min.js') }}'></script>
     <script src='{{ asset('/js/bootstrap-datetimepicker.zh-CN.js') }}'></script>
 <script type="text/javascript">
-    /*$('#send_start_time').datetimepicker({
-        language:  'zh-CN',
-        format: "yyyy-mm-dd",
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
-    $('#send_end_time').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });*/
     function DatePicker(beginSelector,endSelector){
         // 仅选择日期
         $(beginSelector).datetimepicker({

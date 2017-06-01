@@ -114,8 +114,8 @@
                             <li class="accordion">
                                 <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 提现管理</span></a>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">申请提现</a></li>
-                                    <li><a href="#">提现记录</a></li>
+                                    <li><a href="{{ asset('store/withdrawal/create') }}">申请提现</a></li>
+                                    <li><a href="{{ asset('store/withdrawal/index') }}">提现记录</a></li>
                                 </ul>
                             </li>
                             <li class="accordion">
