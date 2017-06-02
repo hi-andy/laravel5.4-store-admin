@@ -18,7 +18,10 @@ Route::get('/logout', 'Auth\LoginController@logout');
 
 // 商家后台路由组
 Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store'], function() {
+
+    // 后台主页
     Route::get('/', 'HomeController@index');
+    Route::post('/', 'HomeController@index');
 //    Route::resource('order', 'OrderController');
 
     // 订单
