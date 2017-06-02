@@ -47,7 +47,7 @@
                                 <div class="col-sm-7">
                                     <input type="text" class="form-control" name="withdrawal_money" placeholder="当天只能提现一次，且提现金额该为500的倍数">
 
-                                    可提现金额：<span style="color:#f30;">{{ $amount_money }}</span>
+                                    可提现金额：￥ <span style="color:#f30;">{{ $amount_money }}</span> 元
                                 </div>
                             </div>
 

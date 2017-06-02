@@ -38,7 +38,6 @@ class WithdrawalController extends Controller
         )->where('store_id', Auth::user()->id)->orderBy('sw_id','desc')->get();
         foreach ($query as $value) {
             $value->status = $value->status == 0 ? '申请中' : ($value->status == 1 ? '同意提现' : '拒绝提现');
-            //$value->withdrawal_type = $value->withdrawal_type == 'alipay' ? '支付宝' : '微信';
         }
         return $datatables->collection($query)
             ->make(true);
@@ -100,40 +99,25 @@ class WithdrawalController extends Controller
      */
     private function withdrawal_money($store_id)
     {
-        $reflect = $total = 0;
-        //拿到总共能体现的资金
-        $one = \App\Order::select('confirm_time','order_amount')
-                            ->where('store_id', '=', $store_id)
-                            ->where('confirm_time', '<>', null)
-                            ->where(function ($query) {
-                              $query->where('order_type', '=', 4)
-                                    ->orWhere('order_type', '=', 16)
-                                    ->orWhere('order_type', '=', 7)
-                                    ->orWhere('order_type', '=', 6);
-                            })->get();
-
-        foreach($one as $v){
-            $towDays = 3600 * 24 * 2;
-            $escaped = time() - $v->confirm_time;
-            if($escaped >= $towDays){
-                $reflect += $v->order_amount;
-            }
-        }
-        //获取以前的提取记录
-        $withdrawal_total = Withdrawal::select('withdrawal_money')
-                                        ->where('store_id', '=', $store_id)
+        $time = time() - 3600 * 24 * 2; // 已确认收货48小时的订单
+        //订单总额
+        $order_amount = \App\Order::where('store_id', '=', $store_id)
+                                    ->where('confirm_time', '<>', null)
+                                    ->where('confirm_time', '<', $time)
+                                    ->where(function ($query) {
+                                        $query->where('order_type', '=', 4)
+                                        ->orWhere('order_type', '=', 16)
+                                        ->orWhere('order_type', '=', 7)
+                                        ->orWhere('order_type', '=', 6);
+                            })->sum('order_amount');
+        //获取以前的提现总额
+        $withdrawal_money = Withdrawal::where('store_id', '=', $store_id)
                                         ->where(function ($query) {
                                             $query->where('status', '=', 1)
-                                                  ->orWhere('status', '=', 0 );
-                                        })->get();
+                                                ->orWhere('status', '=', 0 );
+                                        })->sum('withdrawal_money');
 
-        foreach($withdrawal_total as $v)
-        {
-            $total += $v->withdrawal_money;
-        }
-        $money = $reflect - $total;
-        list($intVal, $floatVal) = explode('.', $money);
-        return $intVal . '.' . substr($floatVal, 0, 2);
+        return sprintf("%.2f", $order_amount - $withdrawal_money);
     }
 
 }
