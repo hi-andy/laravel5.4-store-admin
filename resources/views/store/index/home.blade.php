@@ -128,7 +128,7 @@
                                     <td>{{ $value['order_num'] }}</td>
                                     <td>{{ $value['amount'] }}</td>
                                     <td>{{ $value['all'] }}</td>
-                                    <td><a href="{:U('Report/saleList',array('begin'=>$vo['day'],'end'=>$vo['end']))}">订单列表</a></td>
+                                    <td><a href="{{ asset('/store/dayOrderList/begin/'.$value['day'].'/end/'.$value['end']) }}">订单列表</a></td>
                                 </tr>
                             @endforeach
                             </tbody>

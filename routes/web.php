@@ -22,6 +22,11 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store
     // 后台主页
     Route::get('/', 'HomeController@index');
     Route::post('/', 'HomeController@index');
+    Route::get('/dayOrderList/begin/{begin}/end/{end}', 'HomeController@dayOrderList');
+    //Route::get('/rangeOrderList', 'HomeController@rangeOrderList');
+    //Route::any('/rangeOrderList', 'HomeController@rangeOrderList');
+    Route::match(['post','get'], '/rangeOrderList', 'HomeController@rangeOrderList');
+
 //    Route::resource('order', 'OrderController');
 
     // 订单

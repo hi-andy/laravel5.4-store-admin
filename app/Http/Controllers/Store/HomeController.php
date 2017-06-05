@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Yajra\Datatables\Datatables;
 
 class HomeController extends Controller
 {
-
+    private $timeRange;
     public $begin;
     public $end;
     public $order_type;
@@ -19,30 +20,34 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->middleware('auth');
+
+        $timeRange = $request->timeRange;
+        $gap = $request->Input('gap', 7);
+        if ($timeRange) {
+            list($begin, $end) = explode('-', $timeRange);
+        } else {
+            $lastWeek = date('Y/m/d', (time() - $gap * 60 * 60 * 24)); //上一周
+            $begin = $request->Input('begin', $lastWeek);
+            $end = $request->Input('end', date('Y/m/d'));
+        }
+
+        //echo $begin;exit;
+        $this->timeRange = $begin . '-' . $end;
+        $this->begin = strtotime($begin);
+        $this->end = strtotime($end);
     }
 
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
+     * 后台首页
      */
-    public function index(Request $request)
+    public function index()
     {
-        $timeRange = $request->timeRange;
-        $gap = $request->Input('gap', 7);
-        if ($timeRange) {
-            list($begin, $end) = explode('-', $timeRange);
-        } else {
-            $lastWeek = date('Y-m-d', (time() - $gap * 60 * 60 * 24)); //上一周
-            $begin = $request->Input('begin', $lastWeek);
-            $end = $request->Input('end', date('Y-m-d'));
-        }
-        $timeRange = $begin . '-' . $end;
-        $this->begin = strtotime($begin);
-        $this->end = strtotime($end);
         //起始时间
         $now = strtotime(date('Y-m-d')); $tomorrow = $now + 24 * 3600;
         //今日销售总额
@@ -110,6 +115,77 @@ class HomeController extends Controller
         $collection = collect($result);
         $result = $collection->toJson();
 
-        return view('store\home', ['timeRange' => $timeRange, 'today' => $today, 'list' => $list, 'result' => $result]);
+        return view('store\index\home', ['timeRange' => $this->timeRange, 'today' => $today, 'list' => $list, 'result' => $result]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 查看每日订单列表页
+     */
+    public function dayOrderList(Request $request)
+    {
+        $this->timeRange = $request->begin . ' - ' . $request->end;
+        $this->begin = strtotime($request->begin);
+        $this->end = strtotime($request->end);
+        $query = DB::table('order_goods')
+            ->leftJoin('order', 'order.order_id', '=', 'order_goods.order_id')
+            ->select(
+                    'order_goods.goods_num',
+                    'order_goods.goods_price',
+                    'order_goods.goods_name',
+                    'order.order_sn',
+                    'order.add_time',
+                    'order.order_type',
+                    'order.order_id'
+                    )
+            ->where('order.store_id', '=', Auth::user()->id)
+            ->where('order.add_time', '>', $this->begin)
+            ->where('order.add_time', '<', $this->end)
+            ->orderBy('add_time')
+            ->paginate(15);
+        foreach($query as $value) {
+            $value->add_time = date('Y-m-d H:i:s', $value->add_time);
+        }
+        return view('store\index\dayOrderList', ['timeRange'=>$this->timeRange, 'list'=>$query]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 时间范围内订单列表
+     */
+    public function rangeOrderList(Request $request)
+    {
+        if ($time = $request->time) {
+            $begin  = date('Y/m/d', (time() - $time * 60 * 60 * 24)); //上一周
+            $end = $request->Input('end', date('Y/m/d'));
+            $this->timeRange = $begin . '-' . $end;
+            $this->begin = strtotime($begin);
+            $this->end = strtotime($end);
+        }  else {
+            $this->timeRange = $request->timeRange;
+        }
+
+        $query = DB::table('order_goods')
+            ->leftJoin('order', 'order.order_id', '=', 'order_goods.order_id')
+            ->select(
+                'order_goods.goods_num',
+                'order_goods.goods_price',
+                'order_goods.goods_name',
+                'order.order_sn',
+                'order.add_time',
+                'order.order_type',
+                'order.order_id'
+            )
+            ->where('order.store_id', '=', Auth::user()->id)
+            ->where('order.add_time', '>', $this->begin)
+            ->where('order.add_time', '<', $this->end)
+            ->orderBy('add_time')
+            ->paginate(15);
+        foreach($query as $value) {
+            $value->add_time = date('Y-m-d H:i:s', $value->add_time);
+        }
+        return view('store\index\rangeOrderList', ['timeRange'=>$this->timeRange, 'time'=>$time, 'list'=>$query]);
     }
 }
