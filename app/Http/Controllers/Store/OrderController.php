@@ -30,7 +30,7 @@ class OrderController extends Controller
             'pay_name',
             'shipping_name',
             'add_time'
-        )->where('store_id', $store_id)->where('is_show', '1')->orderBy('order_sn','desc')->simplePaginate(15);
+        )->where('store_id', $store_id)->where('is_show', '1')->orderBy('order_sn','desc')->paginate(15);
 
         foreach ($query as $value) {
             $value->pay_time = $value->pay_time ? date('Y-m-d H:i:s', $value->pay_time) : '';
@@ -50,7 +50,6 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        header("Access-Control-Allow-Origin:*");
         $order = Order::find($id);
         return response()->json($order);
     }
