@@ -5,10 +5,12 @@
 namespace App\Http\Controllers\Store;
 
 use App\Goods;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 
 class GoodsController extends Controller
 {
@@ -62,7 +64,9 @@ class GoodsController extends Controller
     {
         $cat = new CategoryController();
         $category = $cat->getSubCategory('0');
-        return view('store/goods/create', ['category'=>$category]);
+
+        $specifications = DB::table('specification')->select('id','name')->where('is_show', 1)->get();
+        return view('store/goods/create', ['category'=>$category, 'specification'=>$specifications]);
     }
 
     /**
@@ -71,12 +75,12 @@ class GoodsController extends Controller
      */
     public function store(Request $request)
     {
-//        $messages = [
-//            'goods_name'    => 'The :attribute and :other must match.',
-//            'cat_id'    => 'The :attribute must be exactly :size.',
-//            'prom' => 'The :attribute must be greatThan :min',
-//            'shop_price'      => '请填写销售价格',
-//        ];
+        /*$messages = [
+            'goods_name'    => 'The :attribute and :other must match.',
+            'cat_id'    => 'The :attribute must be exactly :size.',
+            'prom' => 'The :attribute must be greatThan :min',
+            'shop_price'      => '请填写销售价格',
+        ];*/
         $this->validate($request, [
             'goods_name' => 'required|max:255',
             'store_count'   => 'nullable',
@@ -117,6 +121,21 @@ class GoodsController extends Controller
     }
 
     /**
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * ajax 方式保存新增商品信息
+     */
+    public function ajaxStore(Request $request)
+    {
+        //Response::json('goods', $request->goods_name);
+        $specArray = $request->special;
+        //print_r($specArray);
+        foreach ($specArray['spec1'] as $key=>$value) {
+            echo $value['prom'];
+        }
+        //echo $request->input('special.*.spec1');
+    }
+
+    /**
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * 显示修改商品信息
@@ -129,8 +148,6 @@ class GoodsController extends Controller
         $category3 = $cat->getCategory($goods->cat_id);
         $category2 = $cat->getCategory($category3->parent_id);
         $category1 = $cat->getCategory($category2->parent_id);
-        //print_r($category1->name);
-        //dd($goods);
         return view('store/goods/edit', ['goods'=>$goods,'category'=>$category,'category1'=>$category1,'category2'=>$category2,'category3'=>$category3]);
     }
 

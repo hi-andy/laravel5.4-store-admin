@@ -14,20 +14,19 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
 Route::get('/logout', 'Auth\LoginController@logout');
 
 // 商家后台路由组
-Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store'], function() {
+Route::group(['middleware' => 'auth', 'namespace' => 'Store'], function() {
 
     // 后台主页
-    Route::get('/', 'HomeController@index');
-    Route::post('/', 'HomeController@index');
+    Route::get('/index', 'HomeController@index');
+    Route::post('/index', 'HomeController@index');
     Route::get('/dayOrderList/begin/{begin}/end/{end}', 'HomeController@dayOrderList');
-    //Route::get('/rangeOrderList', 'HomeController@rangeOrderList');
     //Route::any('/rangeOrderList', 'HomeController@rangeOrderList');
     Route::match(['post','get'], '/rangeOrderList', 'HomeController@rangeOrderList');
-
-//    Route::resource('order', 'OrderController');
 
     // 订单
     Route::get('order/index',       'OrderController@index');
@@ -46,6 +45,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store
     Route::get('goods/index',           'GoodsController@index');
     Route::get('goods/data',            'GoodsController@data');
     Route::get('goods/create',          'GoodsController@create');
+    Route::post('goods/ajaxStore',      'GoodsController@ajaxStore');
     Route::post('goods/store',          'GoodsController@store');
     Route::get('goods/edit/{id}',       'GoodsController@edit');
     Route::post('goods/update/{id}',    'GoodsController@update');
@@ -71,9 +71,6 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Store', 'prefix' => 'store
 
 });
 
-
-Route::get('eloquent/array', 'Eloquent\ArrayResponseController@index');
-Route::get('eloquent/array-data', 'Eloquent\ArrayResponseController@data');
 
 
 Auth::routes();

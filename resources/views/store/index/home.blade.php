@@ -15,7 +15,7 @@
                     <div class=" with-border">
                         <div class="row">
                             <div class="col-md-12" style="text-align:center;">
-                                <form action="{{ url('/store') }}" method="post">
+                                <form action="{{ url('/index') }}" method="post">
                                     {!! csrf_field() !!}
                                     <div class="col-xs-3">
                                         {{--<a class="btn btn-primary margin" href="{:U('Report/index',array('gap'=>7))}">最近7天</a>--}}
@@ -128,7 +128,7 @@
                                     <td>{{ $value['order_num'] }}</td>
                                     <td>{{ $value['amount'] }}</td>
                                     <td>{{ $value['all'] }}</td>
-                                    <td><a href="{{ asset('/store/dayOrderList/begin/'.$value['day'].'/end/'.$value['end']) }}">订单列表</a></td>
+                                    <td><a href="{{ asset('/dayOrderList/begin/'.$value['day'].'/end/'.$value['end']) }}">订单列表</a></td>
                                 </tr>
                             @endforeach
                             </tbody>

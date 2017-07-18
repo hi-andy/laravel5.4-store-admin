@@ -78,7 +78,7 @@
                 },
                 serverSide: true,
                 processing: true,
-                ajax: '/store/refund/data',
+                ajax: '/refund/data',
                 columns: [
                     {data: 'order_sn'},
                     {data: 'goods_name'},

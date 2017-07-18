@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 商品分类控制器
+ */
 namespace App\Http\Controllers\Store;
 
 use App\Category;

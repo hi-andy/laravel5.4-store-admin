@@ -32,8 +32,8 @@
 
                     <div class="box-content" style="min-height: 1000px;">
                         <br>
-                        <form role="form" method="post" action="{{ url('/store/goods/store') }}" enctype="multipart/form-data">
-                            {!! csrf_field() !!}
+                        <form role="form" method="post" onsubmit="return false" action="{{ url('/goods/store') }}" enctype="multipart/form-data">
+                            {{--{!! csrf_field() !!}--}}
                             <div class="control-group col-md-8">
                                 <label class="control-label col-sm-2" for="selectError">商品分类</label>
 
@@ -109,20 +109,111 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-10">
                                 <label class="col-sm-2 control-label">商品规格与库存</label>
                                 <div class="control-group col-md-10">
 
                                     <label class="control-label col-sm-2" for="selectError">规格</label>
                                     <div class="controls col-sm-10">
-                                        <input type="radio" name="special" id="special1" value="1" /> <label  for="special1">单品</label>&nbsp;
-                                        <input type="radio" name="special" id="special2" value="2" /> <label for="special2">一种规格</label>&nbsp;
-                                        <input type="radio" name="special" id="special3" value="3" /> <label for="special3">两种规格</label>&nbsp;
+                                        <input type="radio" name="type" checked="checked" value="1" /> <label  for="special1">单品</label>&nbsp;
+                                        <input type="radio" name="type" value="2" /> <label for="special2">一种规格</label>&nbsp;
+                                        <input type="radio" name="type" value="3" /> <label for="special3">两种规格</label>&nbsp;
                                     </div>
-                                    <br />
-                                    <br />
-                                    <br />
 
+                                    <style>
+                                        .specification {
+                                            margin:15px;
+                                            margin-bottom:20px;
+                                            display: none;
+                                        }
+                                        .add {
+                                            margin:20px;
+                                        }
+                                        .operationStatus {
+                                            text-indent:15px;
+                                            display:block;
+                                            background: url("../../images/arrow_down.png") no-repeat left center;
+                                        }
+                                    </style>
+                                    
+                                    <div class="specification spec1">
+                                        <label  class="col-sm-2 control-label"></label>
+                                        <div class="controls col-sm-10">
+                                            <select name="spec">
+                                                <option value="0">请选择规格1</option>
+                                                @foreach($specification as $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <br>
+                                            <a href="###" class="add">+添加</a>
+                                        </div>
+                                    </div>
+                                    <div class="specification spec2">
+                                        <label  class="col-sm-2 control-label"></label>
+                                        <div class="controls col-sm-10">
+                                            <select name="spec">
+                                                <option value="0">请选择规格2</option>
+                                                @foreach($specification as $value)
+                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <br>
+                                            <a href="###" class="add">+添加</a>
+                                        </div>
+                                    </div>
+                                    
+
+                                    <style type="text/css">
+                                    #special_name{
+                                        /*width: 350px;*/
+
+                                        display: none;
+                                        padding: 1rem .5rem;
+                                        position : absolute;
+                                        background: #fff;
+                                        border:1px solid #ccc;
+                                        border-radius:.5rem;
+                                        z-index : 9999;
+                                    }
+                                    </style>
+                                    <div id="special_name" class="col-md-5">
+                                        <input type="text" class="col-md-8 pull-left" name="name" style="height:35px;"  >
+                                        <input type="button" class="btn btn-primary col-md-2 pull-left confirm" value="确认">
+                                        <input type="button" class="btn btn-default col-sm-2 pull-left cancel" value="取消">
+                                    </div>
+                                    
+                                    <label  class="col-sm-2 control-label"></label>
+                                    <div class="controls col-sm-10 spec-list">
+                                        <table class="table table-striped table-bordered responsive">
+                                            <thead>
+                                            <tr class="th">
+                                                <th class="col-xs-1">当前库存</th>
+                                                <th class="col-xs-1">库存增减</th>
+                                                <th class="col-xs-1">团购价</th>
+                                                <th class="col-xs-1">单买价</th>
+                                                <th class="col-xs-1">SKU预览图</th>
+                                                <th class="col-xs-1">状态</th>
+                                                <th class="col-xs-1">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="tr">
+                                                    <td>0</td>
+                                                    <td><input type="text" style="width: 90px;" name="sku_number"></td>
+                                                    <td><input type="text" style="width: 90px;" name="group_price"></td>
+                                                    <td><input type="text" style="width: 90px;" name="price"></td>
+                                                    <td><input type="file" style="width: 75px;" name="sku_picture"></td>
+                                                    <td class="tdStatus"><input type="hidden" name="status" value="1" ><span class="status">已上架</span></td>
+                                                    <td><a href="###" class="operationStatus">下架</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <br />
+                                    <br />
+                                    <br />
 
                                     <label  class="col-sm-2 control-label">总库存</label>
                                     <div class="col-sm-10">
@@ -131,8 +222,18 @@
 
                                 </div>
                             </div>
+
+                            <div class="form-group col-md-8">
+                                    <label  class="col-sm-2 control-label">总库存</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="store_count" placeholder="">
+                                    </div>
+
+                            </div>
+
+
                             <div class="form-group col-md-12">
-                                <button type="submit" class="btn btn-default">Submit</button>
+                                <button type="submit" class="btn btn-default btn-primary">提交</button>
                             </div>
                         </form>
 
@@ -148,7 +249,7 @@
  * 获取多级联动的商品分类
  */
 function get_category(id,next,select_id){
-    var url = '/store/category/getSubCategory/' + id;
+    var url = '/category/getSubCategory/' + id;
     var html = '';
     $.ajax({
         type : "GET",
@@ -166,6 +267,136 @@ function get_category(id,next,select_id){
             (select_id > 0) && $('#'+next).val(select_id);//默认选中
         }
     });
+}
+
+$(function () {
+    var checked = 0, key = true, value = true;
+    // 规格种类选择
+    $('input:radio').on('click', function () {
+        checked = $(this).val();
+        if (checked == 1) {
+            $('.specification').css('display', 'none');
+        } else if(checked == 2) {
+            $('.specification').css('display', 'none');
+            $('.spec1').css('display', 'block');
+        } else if(checked == 3) {
+            $('.specification').css('display', 'none');
+            $('.spec1').css('display', 'block');
+            $('.spec2').css('display', 'block');
+        }
+    });
+
+    // 添加规格名称按钮 弹出添加规格输入框
+    $('.add').on('click', function () {
+        var selected = $(this).parent().children('select').children('option:selected');
+        if (selected.val() == 0) {
+            alert(selected.text());
+            return false;
+        }
+
+        // 显示 input
+        var special_input = $('#special_name');
+        special_input.css({
+            'display' : 'block',
+            'top' : $(this).position().top + 40,
+            'left' : $(this).position().left
+        });
+        // 确认添加规格
+        $('.confirm').on('click', function () {
+            if (key) {
+                var th_element = '<th class="col-xs-1">' + selected.text() + '</th>';
+                $('.th').prepend(th_element);
+                key = false;
+            }
+            var name = $(this).siblings('input[name="name"]').val();
+            if (value) {
+                var tr_element = '<td>' + name + '</td>';
+                $('.tr').prepend(tr_element);
+                value = false;
+            } else {
+                var tr = '<tr><td>' + name + '</td>'
+                            + '<td>0</td>'
+                            + '<td><input type="text" style="width: 90px;" name="sku_number"></td>'
+                            + '<td><input type="text" style="width: 90px;" name="group_price"></td>'
+                            + '<td><input type="text" style="width: 90px;" name="price"></td>'
+                            + '<td><input type="file" style="width: 75px;" name="sku_picture"></td>'
+                            + '<td class="tdStatus"><input type="hidden" name="status" value="1" ><span class="status">已上架</span></td>'
+                            + '<td><a href="###" class="operationStatus">下架</a></td></tr>';
+
+                $('.table tbody').append(tr);
+            }
+
+            $(this).parent().hide();
+        });
+        // 取消添加规格
+        $('.cancel').on('click', function () {
+            special_input.hide();
+        });
+    });
+
+    // 上下架状态操作， 动态添加的元素可点击。
+    $(document).on('click', '.operationStatus', function(e) {
+        var status = $(this).parents().siblings('.tdStatus').children('input[type=\'hidden\']');
+        if (status.val() == 1) {
+            status.val(0);
+            status.siblings('.status').html('已下架');
+            $(this).css('background', 'url("../../images/arrow_up.png") no-repeat left center');
+            $(this).html('上架');
+        } else {
+            status.val(1);
+            status.siblings('.status').html('已上架');
+            $(this).css('background', 'url("../../images/arrow_down.png") no-repeat left center');
+            $(this).html('下架');
+        }
+    });
+    $('button[type="submit"]').on('click', function () {
+        create();
+    })
+});
+function create() {
+    var cat_id = $('#cat_id_3 option:selected').val() ? $('#cat_id_3 option:selected').val() : $('#cat_id_2 option:selected').val();
+    $.ajax({
+        url     : '/goods/ajaxStore',
+        type    : 'post',
+        dataType: 'json',
+        data    :  {
+            cat_id     : cat_id,
+            goods_name : $('input[name="goods_name"]').val(),
+            shop_pirce : $('input[name="shop_pirce"]').val(),
+            prom       : $('input[name="prom"]').val(),
+            _token     : '{{csrf_token()}}',
+            special    : {
+                "spec1":[
+                    {
+                        "spec1_key" : 1,
+                        "spec1_value" : "碎花",
+                        "sku_number":"20",
+                        "sku_picture":"public/1.png",
+                        "prom":"2",
+                        "group_price":"15",
+                        "shop_price" : "20",
+                        "status"        : 0
+                    },
+                    {
+                        "spec1_key" : 1,
+                        "spec1_value" : "云朵",
+                        "sku_number":"10",
+                        "sku_picture":"public/2.png",
+                        "prom":"2",
+                        "group_price":"8",
+                        "shop_price" : "10",
+                        "status"        : 1
+                    }
+                ]
+            }
+        },
+        success : function (response) {
+            alert(response);
+        },
+        errors : function (errors) {
+            alert(errors);
+        }
+    })
 }
 </script>
 @endsection

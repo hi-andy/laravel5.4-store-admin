@@ -16,16 +16,6 @@ class CouponController extends Controller
      */
     public function index()
     {
-        return view('store/coupon/home');
-    }
-
-    /**
-     * @param Datatables $datatables
-     * @return \Illuminate\Http\JsonResponse
-     * 返回列表 Json 数据
-     */
-    public function data(Datatables $datatables)
-    {
         $query = Coupon::select(
             'id',
             'name',
@@ -41,9 +31,7 @@ class CouponController extends Controller
             $value->condition = '满 ' . $value->condition . ' 可用';
         }
 
-        return $datatables->collection($query)
-            ->addColumn('action', 'store.coupon.user-action')
-            ->make(true);
+        return response()->json($query);
     }
 
     // 添加优惠券页面
@@ -75,7 +63,6 @@ class CouponController extends Controller
             return redirect()->back()->withInput()->with('failed', '优惠券名称不能为空！');
         }
 
-
         if ($coupon->save()) {
             return redirect('store/coupon/create')->with('success', '优惠券添加成功！');
         } else {
@@ -90,7 +77,9 @@ class CouponController extends Controller
         $coupon->send_end_time      = date('Y-m-d', $coupon->send_end_time);
         $coupon->use_start_time     = date('Y-m-d', $coupon->use_start_time);
         $coupon->use_end_time       = date('Y-m-d', $coupon->use_end_time);
-        return view('store/coupon/edit', ['coupon'=>$coupon]);
+
+        //return view('store/coupon/edit', ['coupon'=>$coupon]);
+        return response()->json(['coupon'=>$coupon]);
     }
 
     /**
@@ -133,11 +122,6 @@ class CouponController extends Controller
         Coupon::find($id)->delete();
         return redirect('store/coupon/index')->with('success', '优惠券删除成功！');
     }
-
-
-
-
-
 
     /**
      * type发放类型: 0面额模板1 按用户发放 2 注册 3 邀请 4 线下发放

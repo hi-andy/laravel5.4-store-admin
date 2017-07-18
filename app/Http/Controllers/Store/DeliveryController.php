@@ -16,8 +16,6 @@ class DeliveryController extends Controller
 
     public function data(Datatables $datatables)
     {
-        $request = new Request();
-//        $query = \App\Order::where('store_id', Auth::user()->id)->where('prom_id', 'null')->orderBy('order_sn','desc')->get();
         $query = \App\Order::select(
             'order_sn',
             'consignee',
@@ -34,6 +32,5 @@ class DeliveryController extends Controller
         return $datatables->collection($query)
             ->addColumn('action', 'store.delivery.user-action')
             ->make(true);
-
     }
 }

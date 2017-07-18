@@ -4,19 +4,16 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
-    protected $table = 'merchant';  //表名
-    protected $primaryKey = "id";    //定义用户表主键
-    public $timestamps = false;
+    protected   $table          = 'merchant';  //表名
+    protected   $primaryKey     = "id";    //定义用户表主键
+    public      $timestamps     = false;
 
-    public function setPasswordAttribute($password)
-    {
-        $this->attributes['password'] = md5($password);
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'merchant_name', 'email', 'password'
     ];
 
 
@@ -36,4 +33,24 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * 更换加密方式，使用 MD5 方式加密
+     *
+     * @param $password
+     */
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = md5($password);
+    }
+
+    /**
+     * 使用自定的用户名进行授权
+     *
+     * @param $username
+     * @return mixed
+     */
+    public function findForPassport($username) {
+        return $this->where('merchant_name', $username)->first();
+    }
 }

@@ -1,12 +1,13 @@
 <?php
-
+/**
+ * 商家后台首页控制器
+ */
 namespace App\Http\Controllers\Store;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Yajra\Datatables\Datatables;
 
 class HomeController extends Controller
 {
@@ -48,26 +49,26 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $store_id = Auth::guard('api')->id();
         //起始时间
         $now = strtotime(date('Y-m-d')); $tomorrow = $now + 24 * 3600;
         //今日销售总额
-        $today['today_amount'] = \App\Order::where('store_id', '=', Auth::user()->id)->where('add_time', '>', $now)->where('add_time', '<', $tomorrow)->where('pay_status', 1)->sum('order_amount');
+        $today['today_amount'] = \App\Order::where('store_id', '=', $store_id)->where('add_time', '>', $now)->where('add_time', '<', $tomorrow)->where('pay_status', 1)->sum('order_amount');
         //计算今日订单数
-        $today['today_order'] = \App\Order::where('store_id', '=', Auth::user()->id)->where('add_time', '>', $now)->where('add_time', '<', $tomorrow)->where('pay_status', 1)->count();
+        $today['today_order'] = \App\Order::where('store_id', '=', $store_id)->where('add_time', '>', $now)->where('add_time', '<', $tomorrow)->where('pay_status', 1)->count();
         //今日取消订单
-        $today['cancel_order'] = \App\Order::where('store_id', '=', Auth::user()->id)->where('add_time', '>', $now)->where('add_time', '<', $tomorrow)->where('is_cancel', 1)->count();
+        $today['cancel_order'] = \App\Order::where('store_id', '=', $store_id)->where('add_time', '>', $now)->where('add_time', '<', $tomorrow)->where('is_cancel', 1)->count();
         //待发货订单数     order_type=2 OR order_type=14 //待发货；已成团待发货
-        $today['undelivered_order'] = \App\Order::where('store_id', '=', Auth::user()->id)->where(function ($query) {
-            $query->where('order_type', 2)->orWhere('order_type', 14);
-        })->count();
+        $today['undelivered_order'] = \App\Order::where('store_id', '=', $store_id)->where(function ($query) { $query->where('order_type', 2)->orWhere('order_type', 14); })->count();
         //售后订单数
-        $today['service_order'] = \App\Refund::where('store_id', '=', Auth::user()->id)->where('status', 0)->count();
+        $today['service_order'] = \App\Refund::where('store_id', '=', $store_id)->where('status', 0)->count();
         //总销售额
-        $today['sign'] = \App\Order::where('store_id', '=', Auth::user()->id)->where('pay_status', 1)->sum('order_amount');
+        $today['sign'] = \App\Order::where('store_id', '=', $store_id)->where('pay_status', 1)->sum('order_amount');
+
         // 获取以日期（天）分组的订单数据：订单数，销售额
         $res = DB::table('order')
             ->select(DB::raw('count(*) as tnum, SUM(order_amount) as amount, FROM_UNIXTIME(add_time, \'%Y-%m-%d\') as gap'))
-            ->where('store_id', '=', Auth::user()->id)
+            ->where('store_id', '=', $store_id)
             ->where('add_time', '>', $this->begin)
             ->where('add_time', '<', $this->end + 24 * 3600)
             ->where('pay_status', '=', 1)
@@ -112,10 +113,8 @@ class HomeController extends Controller
         rsort($list);
 
         $result = array('order' => $order_arr, 'amount' => $amount_arr, 'sign' => $sign_arr, 'all' => $all_arr, 'time' => $day);
-        $collection = collect($result);
-        $result = $collection->toJson();
 
-        return view('store\index\home', ['timeRange' => $this->timeRange, 'today' => $today, 'list' => $list, 'result' => $result]);
+        return response()->json(['timeRange' => $this->timeRange, 'today' => $today, 'list' => $list, 'result' => $result]);
     }
 
     /**
@@ -139,7 +138,7 @@ class HomeController extends Controller
                     'order.order_type',
                     'order.order_id'
                     )
-            ->where('order.store_id', '=', Auth::user()->id)
+            ->where('order.store_id', '=', $store_id)
             ->where('order.add_time', '>', $this->begin)
             ->where('order.add_time', '<', $this->end)
             ->orderBy('add_time')
@@ -147,7 +146,8 @@ class HomeController extends Controller
         foreach($query as $value) {
             $value->add_time = date('Y-m-d H:i:s', $value->add_time);
         }
-        return view('store\index\dayOrderList', ['timeRange'=>$this->timeRange, 'list'=>$query]);
+
+        return response()->json(['timeRange'=>$this->timeRange, 'list'=>$query]);
     }
 
     /**
@@ -178,7 +178,7 @@ class HomeController extends Controller
                 'order.order_type',
                 'order.order_id'
             )
-            ->where('order.store_id', '=', Auth::user()->id)
+            ->where('order.store_id', '=', $store_id)
             ->where('order.add_time', '>', $this->begin)
             ->where('order.add_time', '<', $this->end)
             ->orderBy('add_time')
@@ -186,6 +186,8 @@ class HomeController extends Controller
         foreach($query as $value) {
             $value->add_time = date('Y-m-d H:i:s', $value->add_time);
         }
-        return view('store\index\rangeOrderList', ['timeRange'=>$this->timeRange, 'time'=>$time, 'list'=>$query]);
+
+        return response()->json(['timeRange'=>$this->timeRange, 'time'=>$time, 'list'=>$query]);
     }
+
 }

@@ -15,11 +15,11 @@
                     <div class=" with-border">
                         <div class="row">
                             <div class="col-md-12" style="text-align:center;">
-                                <form action="{{ url('/store/rangeOrderList') }}" method="post">
+                                <form action="{{ url('/rangeOrderList') }}" method="post">
                                     {!! csrf_field() !!}
                                     <div class="col-xs-3" style="width: 12.7%;margin-left:20%;">
-                                        <a class="btn btn-default margin" href="{{ asset('/store/rangeOrderList?time=7') }}">最近7天</a>
-                                        <a class="btn btn-default margin" href="{{ asset('/store/rangeOrderList?time=30') }}">最近30天</a>
+                                        <a class="btn btn-default margin" href="{{ asset('/rangeOrderList?time=7') }}">最近7天</a>
+                                        <a class="btn btn-default margin" href="{{ asset('/rangeOrderList?time=30') }}">最近30天</a>
                                     </div>
                                     <div class="col-xs-4">
                                         <div class="input-group margin">

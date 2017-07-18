@@ -83,7 +83,7 @@
             },
             serverSide: true,
             processing: true,
-            ajax: '/store/order/data',
+            ajax: '/order/data',
             columns: [
                 {data: 'order_sn'},
                 {data: 'consignee'},

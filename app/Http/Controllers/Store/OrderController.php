@@ -5,59 +5,54 @@
 namespace App\Http\Controllers\Store;
 
 use App\Order;
-use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * 显示页面
+     * 订单列表
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('store/order/home');
-    }
-
-    /**
-     * @param Datatables $datatables
-     * @return \Illuminate\Http\JsonResponse  返回订单Json数据
-     */
-    public function data(Datatables $datatables)
-    {
+        $store_id = Auth::guard('api')->id();
         $query = Order::select(
-                'order_id',
-                'order_sn',
-                'consignee',
-                'total_amount',
-                'order_amount',
-                'order_type',
-                'pay_status',
-                'shipping_status',
-                'pay_name',
-                'shipping_name',
-                'add_time'
-        )->where('store_id', Auth::user()->id)->where('is_show', '1')->orderBy('order_sn','desc')->get();
+            'order_id',
+            'order_sn',
+            'consignee',
+            'total_amount',
+            'order_amount',
+            'order_type',
+            'pay_status',
+            'shipping_status',
+            'pay_name',
+            'shipping_name',
+            'add_time'
+        )->where('store_id', $store_id)->where('is_show', '1')->orderBy('order_sn','desc')->simplePaginate(15);
+
         foreach ($query as $value) {
-            $value->pay_time = date('Y-m-d H:i:s', $value->pay_time);
+            $value->pay_time = $value->pay_time ? date('Y-m-d H:i:s', $value->pay_time) : '';
             $value->add_time = date('Y-m-d H:i:s', $value->add_time);
             $value->shipping_status = $value->shipping_status ? '已发货' : '未发货';
             $value->pay_status = $value->pay_status ? '已付款' : '未付款';
             $value->order_type = $this->transformStatus($value->order_type);
         }
 
-        return $datatables->collection($query)
-            ->addColumn('action', 'store.order.user-action')
-            ->make(true);
+        return response()->json($query);
     }
 
+    /**
+     * 订单详情
+     * @param $id 订单 ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
+        header("Access-Control-Allow-Origin:*");
         $order = Order::find($id);
-        return view('store/order/show', ['order'=>$order]);
+        return response()->json($order);
     }
 
     /*

@@ -86,36 +86,36 @@
                         </div>
                         <ul class="nav nav-pills nav-stacked main-menu">
                             <li class="nav-header">Main</li>
-                            <li><a class="ajax-link" href="/store"><i class="glyphicon glyphicon-home"></i><span> 后台主页</span></a>
+                            <li><a class="ajax-link" href="/index"><i class="glyphicon glyphicon-home"></i><span> 后台主页</span></a>
                             </li>
                             <li class="accordion">
                                 <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 订单管理</span></a>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="/store/order/index">订单列表</a></li>
-                                    <li><a href="/store/delivery/index">发货单列表</a></li>
-                                    <li><a href="/store/refund/index">退货单列表</a></li>
+                                    <li><a href="/order/index">订单列表</a></li>
+                                    <li><a href="/delivery/index">发货单列表</a></li>
+                                    <li><a href="/refund/index">退货单列表</a></li>
                                 </ul>
                             </li>
                             <li class="accordion">
                                 <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 商品管理</span></a>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="/store/goods/create">添加商品</a></li>
-                                    <li><a href="/store/goods/index">商品列表</a></li>
+                                    <li><a href="/goods/create">添加商品</a></li>
+                                    <li><a href="/goods/index">商品列表</a></li>
                                     <li><a href="#">商品规格</a></li>
                                 </ul>
                             </li>
                             <li class="accordion">
                                 <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 优惠券管理</span></a>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="{{ asset('store/coupon/create') }}">添加优惠券</a></li>
-                                    <li><a href="{{ asset('store/coupon/index') }}">优惠券列表</a></li>
+                                    <li><a href="{{ asset('coupon/create') }}">添加优惠券</a></li>
+                                    <li><a href="{{ asset('coupon/index') }}">优惠券列表</a></li>
                                 </ul>
                             </li>
                             <li class="accordion">
                                 <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 提现管理</span></a>
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="{{ asset('store/withdrawal/create') }}">申请提现</a></li>
-                                    <li><a href="{{ asset('store/withdrawal/index') }}">提现记录</a></li>
+                                    <li><a href="{{ asset('withdrawal/create') }}">申请提现</a></li>
+                                    <li><a href="{{ asset('withdrawal/index') }}">提现记录</a></li>
                                 </ul>
                             </li>
                             <li class="accordion">

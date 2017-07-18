@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://store'),
+    'url' => env('APP_URL', 'http://store.pinquduo.cn'),
 
     /*
     |--------------------------------------------------------------------------
@@ -188,6 +188,11 @@ return [
          */
         Yajra\Datatables\DatatablesServiceProvider::class,
 
+        /**
+         * Laravel Passport API 验证组件
+         */
+        Laravel\Passport\PassportServiceProvider::class,
+
     ],
 
     /*
@@ -246,6 +251,7 @@ return [
          * Datatables
          */
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+
 
     ],
 
