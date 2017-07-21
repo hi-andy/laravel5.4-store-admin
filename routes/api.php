@@ -55,10 +55,8 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Store'], function() {
 
     // 优惠券
     Route::get('coupon/index',           'CouponController@index');
-    Route::get('coupon/data',            'CouponController@data');
-    Route::get('coupon/create',          'CouponController@create');
     Route::post('coupon/store',          'CouponController@store');
-    Route::get('coupon/edit/{id}',       'CouponController@edit');
+    Route::get('coupon/show/{id}',       'CouponController@show');
     Route::post('coupon/update/{id}',    'CouponController@update');
     Route::post('coupon/destroy/{id}',   'CouponController@destroy');
 

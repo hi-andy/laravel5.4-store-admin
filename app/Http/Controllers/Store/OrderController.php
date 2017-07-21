@@ -40,7 +40,7 @@ class OrderController extends Controller
             $value->order_type = $this->transformStatus($value->order_type);
         }
 
-        return response()->json($query);
+        return $this->toClient(200, 'ok', $query);
     }
 
     /**
@@ -50,8 +50,9 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = Order::find($id);
-        return response()->json($order);
+        $store_id = Auth::guard('api')->id();
+        $order = Order::where('store_id', $store_id)->find($id);
+        return $this->toClient(200, 'ok', $order);
     }
 
     /*

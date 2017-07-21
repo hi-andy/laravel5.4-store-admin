@@ -3,19 +3,22 @@
 namespace App\Http\Controllers\Store;
 
 use App\Coupon;
+use App\Http\Requests\StoreCouponPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Yajra\Datatables\Datatables;
 
 class CouponController extends Controller
 {
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * 列表页
+     * 列表
      */
     public function index()
     {
+        $store_id = Auth::guard('api')->id();
+
         $query = Coupon::select(
             'id',
             'name',
@@ -25,27 +28,23 @@ class CouponController extends Controller
             'send_num',
             'use_num',
             'use_end_time'
-        )->where('store_id', Auth::user()->id)->orderBy('id','desc')->get();
+        )->where('store_id', $store_id)->orderBy('id','desc')->paginate(15);
         foreach ($query as $value) {
             $value->use_end_time = date('Y-m-d', $value->use_end_time);
             $value->condition = '满 ' . $value->condition . ' 可用';
         }
 
-        return response()->json($query);
+        return $this->toClient(200, 'ok', $query);
     }
 
-    // 添加优惠券页面
-    public function create()
+    /**
+     * 创建
+     *
+     * @param StoreCouponPost $request
+     */
+    public function store(StoreCouponPost $request)
     {
-        return view('store/coupon/create');
-    }
-
-
-    public function store(Request $request)
-    {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-        ]);
+        $store_id = Auth::guard('api')->id();
 
         $coupon = new Coupon();
         $coupon->name               = $request->name;
@@ -56,43 +55,45 @@ class CouponController extends Controller
         $coupon->send_end_time      = strtotime($request->send_end_time);
         $coupon->use_start_time     = strtotime($request->use_start_time);
         $coupon->use_end_time       = strtotime($request->use_end_time);
-        $coupon->store_id           = $request->user()->id;
+        $coupon->store_id           = $store_id;
         $coupon->add_time           = time();
 
-        if (empty($coupon->name)) {
-            return redirect()->back()->withInput()->with('failed', '优惠券名称不能为空！');
-        }
-
         if ($coupon->save()) {
-            return redirect('store/coupon/create')->with('success', '优惠券添加成功！');
+            return $this->toClient(201, 'created');
         } else {
-            return redirect()->back()->withInput()->with('failed', '优惠券添加失败！');
+            return $this->toClient(500, 'failed');
         }
     }
 
-    public function edit($id)
+    /**
+     * 详情
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
     {
-        $coupon = Coupon::find($id);
+        $store_id = Auth::guard('api')->id();
+        $coupon = Coupon::where('store_id', $store_id)->find($id);
         $coupon->send_start_time    = date('Y-m-d', $coupon->send_start_time);
         $coupon->send_end_time      = date('Y-m-d', $coupon->send_end_time);
         $coupon->use_start_time     = date('Y-m-d', $coupon->use_start_time);
         $coupon->use_end_time       = date('Y-m-d', $coupon->use_end_time);
+        $coupon->add_time       = date('Y-m-d', $coupon->_time);
 
-        //return view('store/coupon/edit', ['coupon'=>$coupon]);
-        return response()->json(['coupon'=>$coupon]);
+        return $this->toClient(200, 'ok', $coupon);
     }
 
     /**
+     * 更新/修改
+     *
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
-     * 更新优惠券信息
      */
-    public function update(Request $request, $id)
+    public function update(StoreCouponPost $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-        ]);
+        $store_id = Auth::guard('api')->id();
 
         $coupon = Coupon::find($id);
         $coupon->name               = $request->name;
@@ -103,24 +104,26 @@ class CouponController extends Controller
         $coupon->send_end_time      = strtotime($request->send_end_time);
         $coupon->use_start_time     = strtotime($request->use_start_time);
         $coupon->use_end_time       = strtotime($request->use_end_time);
-        $coupon->store_id           = $request->user()->id;
+        $coupon->store_id           = $store_id;
 
         if ($coupon->save()) {
-            return redirect('store/coupon/index')->with('success', '优惠券修改成功！');
+            return $this->toClient(201, 'created');
         } else {
-            return redirect()->back()->withInput()->with('failed', '优惠券修改失败！');
+            return $this->toClient(500, 'failed');
         }
     }
 
     /**
+     * 删除
+     *
      * @param $id
      * @return $this
-     * 删除优惠券
      */
     public function destroy($id)
     {
-        Coupon::find($id)->delete();
-        return redirect('store/coupon/index')->with('success', '优惠券删除成功！');
+        $store_id = Auth::guard('api')->id();
+        Coupon::where('store_id', $store_id)->find($id)->delete();
+        return $this->toClient(200, 'ok');
     }
 
     /**

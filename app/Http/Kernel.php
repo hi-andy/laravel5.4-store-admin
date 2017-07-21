@@ -41,7 +41,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
-            'cross',
+            'cors',
         ],
     ];
 
@@ -61,6 +61,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
         // 允许跨域访问中间件
-        'cross' => \App\Http\Middleware\AccessControlAllowOrigin::class,
+        'cors' => \App\Http\Middleware\AccessControlAllowOrigin::class,
     ];
 }

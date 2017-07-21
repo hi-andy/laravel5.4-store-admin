@@ -75,16 +75,6 @@ class GoodsController extends Controller
      */
     public function store(Request $request)
     {
-        /*$messages = [
-            'goods_name'    => 'The :attribute and :other must match.',
-            'cat_id'    => 'The :attribute must be exactly :size.',
-            'prom' => 'The :attribute must be greatThan :min',
-            'shop_price'      => '请填写销售价格',
-        ];*/
-        $this->validate($request, [
-            'goods_name' => 'required|max:255',
-            'store_count'   => 'nullable',
-        ]);
 
         /**
          * 两种方法获取输入数据
@@ -114,9 +104,9 @@ class GoodsController extends Controller
 
 
         if ($goods->save()) {
-            return redirect('store/goods/create')->with('success', '商品添加成功！');
+            return $this->toClient(201, 'created');
         } else {
-            return redirect()->back()->withInput()->with('failed', '保存失败！');
+            return $this->toClient(500, 'failed');
         }
     }
 
